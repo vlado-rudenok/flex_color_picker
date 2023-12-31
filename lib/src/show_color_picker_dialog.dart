@@ -4,7 +4,7 @@ part of 'color_picker.dart';
 
 /// Define a color picker, show its dialog and wait for it to return a color.
 ///
-Future<Color> showColorPickerDialog(
+Future<Color?> showColorPickerDialog(
   /// Required build context for the dialog
   BuildContext context,
 
@@ -633,7 +633,7 @@ Future<Color> showColorPickerDialog(
     /// Picker properties
     ) async {
   Color selectedColor = color;
-  // ignore: use_build_context_synchronously
+// ignore: use_build_context_synchronously
   if (!(await ColorPicker(
     color: color,
     onColorChanged: (Color newColor) {
@@ -714,7 +714,7 @@ Future<Color> showColorPickerDialog(
     transitionDuration: transitionDuration,
     constraints: constraints,
   ))) {
-    selectedColor = color;
+    return null;
   }
   return selectedColor;
 }

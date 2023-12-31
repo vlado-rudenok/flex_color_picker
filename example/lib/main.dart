@@ -145,7 +145,7 @@ class _ColorPickerPageState extends State<ColorPickerPage> {
                 onSelectFocus: false,
                 onSelect: () async {
                   // Wait for the dialog to return color selection result.
-                  final Color newColor = await showColorPickerDialog(
+                  final Color? newColor = await showColorPickerDialog(
                     // The dialog needs a context, we pass it in.
                     context,
                     // We use the dialogSelectColor, as its starting color.
@@ -199,7 +199,9 @@ class _ColorPickerPageState extends State<ColorPickerPage> {
                   // below does not really matter, but if you want you can
                   // check if they are equal and skip the update below.
                   setState(() {
-                    dialogSelectColor = newColor;
+                    if (newColor != null) {
+                      dialogSelectColor = newColor;
+                    }
                   });
                 }),
           ),
