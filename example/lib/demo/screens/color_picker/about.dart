@@ -50,7 +50,8 @@ void showAppAboutDialog(BuildContext context) {
               TextSpan(
                 style: aboutTextStyle,
                 text: 'This example shows the features of the '
-                    '${App.appName} package. To learn more, check '
+                    '${App.appName} package.\n'
+                    'To learn more, check '
                     'out the package on ',
               ),
               LinkTextSpan(
@@ -60,12 +61,13 @@ void showAppAboutDialog(BuildContext context) {
               ),
               TextSpan(
                 style: aboutTextStyle,
-                text: '. It contains extensive documentation and the source '
+                text: '.\n'
+                    'It contains extensive documentation and the source '
                     'of this example application.\n\n',
               ),
               TextSpan(
                 style: footerStyle,
-                text: 'Live Web demo built with ${App.flutterVersion}, '
+                text: 'Built with Flutter ${App.flutterVersion}, '
                     'using ${App.packageVersion}\n\n',
               ),
             ],

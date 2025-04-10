@@ -9,7 +9,7 @@ import 'package:flutter/material.dart';
 // The handy part is that if it gets in the way in debugging, it is an easy
 // toggle to turn it off there too. Often I just leave them true if it is one
 // I want to see in dev mode, unless it is too chatty.
-const bool _debug = !kReleaseMode && true;
+const bool _debug = !kReleaseMode && false;
 
 /// A HSV color wheel based color picker for Flutter, used by FlexColorPicker.
 ///
@@ -174,14 +174,14 @@ class _ColorWheelPickerState extends State<ColorWheelPicker> {
   static double squareRadius(double radius, double wheelSquarePadding) =>
       (radius - wheelSquarePadding) / math.sqrt(2);
 
-  Offset getOffset(Offset ratio) {
-    // This is bang and cast is not pretty, but SDK does it this way too.
-    final RenderBox renderBox =
-        renderBoxKey.currentContext!.findRenderObject()! as RenderBox;
-
-    final Offset startPosition = renderBox.localToGlobal(Offset.zero);
-    return ratio - startPosition;
-  }
+  // Offset getOffset(Offset ratio) {
+  //   // This is bang and cast is not pretty, but SDK does it this way too.
+  //   final RenderBox renderBox =
+  //       renderBoxKey.currentContext!.findRenderObject()! as RenderBox;
+  //
+  //   final Offset startPosition = renderBox.localToGlobal(Offset.zero);
+  //   return ratio - startPosition;
+  // }
 
   // Called when we start dragging any of the thumbs on the wheel or square
   void onStart(Offset offset) {
@@ -343,6 +343,7 @@ class _ColorWheelPickerState extends State<ColorWheelPicker> {
 
   @override
   Widget build(BuildContext context) {
+    final Color dividerColor = Theme.of(context).dividerColor;
     return GestureDetector(
       dragStartBehavior: DragStartBehavior.down,
 
@@ -380,7 +381,7 @@ class _ColorWheelPickerState extends State<ColorWheelPicker> {
         child: Focus(
           focusNode: _focusNode,
           child: MouseRegion(
-            cursor: MaterialStateMouseCursor.clickable,
+            cursor: WidgetStateMouseCursor.clickable,
             child: Stack(
               fit: StackFit.expand,
               children: <Widget>[
@@ -391,8 +392,7 @@ class _ColorWheelPickerState extends State<ColorWheelPicker> {
                       colorSaturation: colorSaturation,
                       colorValue: colorValue,
                       hasBorder: widget.hasBorder,
-                      borderColor:
-                          widget.borderColor ?? Theme.of(context).dividerColor,
+                      borderColor: widget.borderColor ?? dividerColor,
                       wheelWidth: widget.wheelWidth,
                       wheelSquarePadding: widget.wheelSquarePadding,
                       wheelBorderRadius: widget.wheelSquareBorderRadius,
@@ -411,8 +411,7 @@ class _ColorWheelPickerState extends State<ColorWheelPicker> {
                   child: CustomPaint(
                     painter: _WheelPainter(
                       hasBorder: widget.hasBorder,
-                      borderColor:
-                          widget.borderColor ?? Theme.of(context).dividerColor,
+                      borderColor: widget.borderColor ?? dividerColor,
                       wheelWidth: widget.wheelWidth,
                       ticks: 360,
                     ),

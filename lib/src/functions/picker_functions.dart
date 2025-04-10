@@ -89,7 +89,21 @@ ColorPickerType findColorInSelector({
         if (lookInShades) {
           if (isShadeOfMain(swatch, color, include850)) return key;
         } else {
-          if (swatch.value == color.value) return key;
+          if (swatch.value32bit == color.value32bit) return key;
+        }
+      }
+    }
+  }
+  // If we did not find the color, we try once more with any opacity.
+  for (final ColorPickerType key in typeToSwatchMap.keys) {
+    if (pickersEnabled[key]!) {
+      for (final ColorSwatch<Object> swatch in typeToSwatchMap[key]!) {
+        if (lookInShades) {
+          if (isShadeOfMain(swatch, color.withAlpha(0xFF), include850)) {
+            return key;
+          }
+        } else {
+          if (swatch.value32bit == color.withAlpha(0xFF).value32bit) return key;
         }
       }
     }
@@ -126,7 +140,9 @@ bool isShadeOfMain(
   bool include850,
 ) {
   for (final Color shade in getMaterialColorShades(mainColor, include850)) {
-    if (shade == shadeColor || shade.value == shadeColor.value) return true;
+    if (shade == shadeColor || shade.value32bit == shadeColor.value32bit) {
+      return true;
+    }
   }
   return false;
 }
@@ -153,10 +169,10 @@ List<Color> getMaterialColorShades(ColorSwatch<Object> color, bool include850) {
 }
 
 /// Return the M3 tonal palette for a passed in color as a list of Colors.
-List<Color> getTonalColors(Color color) {
-  final Cam16 camColor = Cam16.fromInt(color.value);
-  final FlexTonalPalette tonalColors =
-      FlexTonalPalette.of(camColor.hue, math.max(48, camColor.chroma));
+List<Color> getTonalColors(Color color, bool fixedMinChroma) {
+  final Cam16 camColor = Cam16.fromInt(color.value32bit);
+  final FlexTonalPalette tonalColors = FlexTonalPalette.of(camColor.hue,
+      fixedMinChroma ? math.max(48, camColor.chroma) : camColor.chroma);
 
   // ignore: unnecessary_lambdas
   return tonalColors.asList.map((int e) => Color(e)).toList();

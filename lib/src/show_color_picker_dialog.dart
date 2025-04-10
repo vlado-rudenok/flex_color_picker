@@ -8,7 +8,7 @@ Future<Color?> showColorPickerDialog(
   /// Required build context for the dialog
   BuildContext context,
 
-  /// The active color selection when the color picker is created.
+  /// The active color selection when the color picker dialog is created.
   Color color, {
   /// A [ColorPickerType] to bool map. Defines which pickers are enabled in the
   /// color picker's sliding selector and thus available as color pickers.
@@ -66,6 +66,39 @@ Future<Color?> showColorPickerDialog(
   /// Defaults to false.
   final bool enableTonalPalette = false,
 
+  /// Whether the tonal palette uses a fixed minimum chroma value for all
+  /// tones or if it uses the chroma value of the selected color.
+  ///
+  /// Prior to version 3.6.0 the tonal palette used minimum chroma value of 48
+  /// or chroma of the selected color. This was the default primary tonal
+  /// palette behavior in Flutter's ColorScheme.fromSeed method before
+  /// Flutter version 3.22.0.
+  ///
+  /// Starting from version 3.6.0 the FlexColorPicker creates a HCT color space
+  /// tonal palette using whatever hue and chroma is in the selected color.
+  ///
+  /// If you for some reason want to use the old behavior, set this property to
+  /// true. This will make the tonal palette use the fixed minimum chroma value
+  /// of 48 for all tones.
+  ///
+  /// Defaults to false.
+  final bool tonalPaletteFixedMinChroma = false,
+
+  /// How much space should be occupied in the color picker's vertical axis.
+  ///
+  /// After allocating space to children, in the ColorPicker column there
+  /// might be some remaining free space. This value controls whether to
+  /// maximize or minimize the amount of
+  /// free space, subject to the incoming layout constraints.
+  ///
+  /// If some children have a non-zero flex factors (and none have a fit of
+  /// [FlexFit.loose]), they will expand to consume all the available space and
+  /// there will be no remaining free space to maximize or minimize, making this
+  /// value irrelevant to the final layout.
+  ///
+  /// Defaults to `MainAxisSize.max` like Column does as well.
+  final MainAxisSize mainAxisSize = MainAxisSize.max,
+
   /// Cross axis alignment used to layout the main content of the
   /// color picker in its column layout.
   ///
@@ -81,6 +114,18 @@ Future<Color?> showColorPickerDialog(
   ///
   /// Defaults to 8 dp. Must be from 0 to 300 dp.
   double columnSpacing = 8,
+
+  /// Vertical spacing below the top toolbar header and action buttons.
+  ///
+  /// If not defined, defaults to [columnSpacing].
+  /// Must be null or from 0 to 300 dp.
+  final double? toolbarSpacing,
+
+  /// Vertical spacing below the material 2 based color shades palette.
+  ///
+  /// If not defined, defaults to [columnSpacing].
+  /// Must be null or from 0 to 300 dp.
+  final double? shadesSpacing,
 
   /// Enable the opacity control for the color value.
   ///
@@ -140,6 +185,19 @@ Future<Color?> showColorPickerDialog(
   ///
   /// Defaults to 40 dp. Must be from 15 to 150 dp.
   double height = 40.0,
+
+  /// Set to true to make tonal color items same size as the size defined
+  /// for main and swatch shades indicator items.
+  ///
+  /// If false, the tonal color items will be smaller and auto sized for the
+  /// palette to be same width as the Material-2 Color palette.
+  ///
+  /// Defaults to false. The color boxes are smaller, but length of their
+  /// items is the same as MaterialColor swatch. You may prefer true to get
+  /// them to be same size, especially if you only use tonal palette.
+  ///
+  /// For legacy compatibility reasons, this property is false by default.
+  bool tonalColorSameSize = false,
 
   /// The horizontal spacing between the color picker indicator items.
   ///
@@ -321,6 +379,39 @@ Future<Color?> showColorPickerDialog(
   /// Defaults to false.
   bool colorCodeHasColor = false,
 
+  /// Whether to show an edit icon button before the color code field.
+  ///
+  /// The edit icon button can be used to give users a visual que that the
+  /// color code field can be edited.
+  ///
+  /// When set to true, the icon button is only shown when the wheel picker is
+  /// active and [colorCodeReadOnly] is false.
+  ///
+  /// Tapping the icon button will focus the color code entry field.
+  ///
+  /// Defaults to false.
+  bool showEditIconButton = false,
+
+  /// The icon to use on the edit icon button.
+  ///
+  /// Defaults to [Icons.edit].
+  IconData editIcon = Icons.edit,
+
+  /// Whether the color code entry field should have no color when focused.
+  ///
+  /// If the option to make the color code field have the same color as the
+  /// selected color is enabled via [colorCodeHasColor], it makes it look
+  /// and double like a big color indicator that shows the selected color.
+  ///
+  /// It can also make the edit of the color code confusing, as its color on
+  /// purpose also changes as you edit and enter a new color value. If you
+  /// find this behavior confusing and want to make the color code field
+  /// always have no color during value entry, regardless of the selected color,
+  /// then set this option to true.
+  ///
+  /// Defaults to false.
+  bool focusedEditHasNoColor = false,
+
   /// Text style for the displayed generic color name in the picker.
   ///
   /// Defaults to `Theme.of(context).textTheme.bodyMedium`, if not defined.
@@ -354,7 +445,7 @@ Future<Color?> showColorPickerDialog(
   /// Defaults to false.
   bool colorCodeReadOnly = false,
 
-  /// Set to true to show the int [Color.value] of the selected `color`.
+  /// Set to true to show the int [Color] value of the selected `color`.
   ///
   /// This is a developer feature, showing the int color value can be
   /// useful during software development. If enabled the value is shown after
@@ -449,6 +540,18 @@ Future<Color?> showColorPickerDialog(
   Map<ColorSwatch<Object>, String> customColorSwatchesAndNames =
       const <ColorSwatch<Object>, String>{},
 
+  /// Color swatch to name map, with custom swatches and their names.
+  ///
+  /// Used to provide custom [ColorSwatch] objects to the custom color picker,
+  /// including their custom name label. These colors, their swatch shades
+  /// and names, are shown and used when the picker type
+  /// [ColorPickerType.customSecondary] option is enabled in the color picker.
+  ///
+  /// Defaults to an empty map. If the map is empty, the custom colors picker
+  /// will not be shown even if it is enabled in [pickersEnabled].
+  Map<ColorSwatch<Object>, String> customSecondaryColorSwatchesAndNames =
+      const <ColorSwatch<Object>, String>{},
+
   // ***************************************************************************
   // Below properties that refer to the dialog
   // ***************************************************************************
@@ -525,6 +628,14 @@ Future<Color?> showColorPickerDialog(
   ///
   /// Defaults to 0.
   final double? dialogElevation,
+
+  /// The color used to paint a drop shadow under the dialog's Material,
+  /// which reflects the dialog's elevation.
+  final Color? shadowColor,
+
+  /// The color used as a surface tint overlay on the dialog's background
+  /// color, which reflects the dialog's elevation.
+  final Color? surfaceTintColor,
 
   /// The semantic label of the dialog used by accessibility frameworks to
   /// announce screen transitions when the dialog is opened and closed.
@@ -643,9 +754,13 @@ Future<Color?> showColorPickerDialog(
     enableShadesSelection: enableShadesSelection,
     includeIndex850: includeIndex850,
     enableTonalPalette: enableTonalPalette,
+    tonalPaletteFixedMinChroma: tonalPaletteFixedMinChroma,
     crossAxisAlignment: crossAxisAlignment,
+    mainAxisSize: mainAxisSize,
     padding: padding,
     columnSpacing: columnSpacing,
+    toolbarSpacing: toolbarSpacing,
+    shadesSpacing: shadesSpacing,
     enableOpacity: enableOpacity,
     opacityTrackHeight: opacityTrackHeight,
     opacityTrackWidth: opacityTrackWidth,
@@ -656,6 +771,7 @@ Future<Color?> showColorPickerDialog(
     width: width,
     height: height,
     spacing: spacing,
+    tonalColorSameSize: tonalColorSameSize,
     runSpacing: runSpacing,
     elevation: elevation,
     hasBorder: hasBorder,
@@ -669,6 +785,7 @@ Future<Color?> showColorPickerDialog(
     title: title,
     heading: heading,
     subheading: subheading,
+    tonalSubheading: tonalSubheading,
     wheelSubheading: wheelSubheading,
     recentColorsSubheading: recentColorsSubheading,
     opacitySubheading: opacitySubheading,
@@ -678,6 +795,9 @@ Future<Color?> showColorPickerDialog(
     colorNameTextStyle: colorNameTextStyle,
     showColorCode: showColorCode,
     colorCodeHasColor: colorCodeHasColor,
+    showEditIconButton: showEditIconButton,
+    editIcon: editIcon,
+    focusedEditHasNoColor: focusedEditHasNoColor,
     colorCodeTextStyle: colorCodeTextStyle,
     colorCodePrefixStyle: colorCodePrefixStyle,
     colorCodeReadOnly: colorCodeReadOnly,
@@ -690,6 +810,7 @@ Future<Color?> showColorPickerDialog(
     pickerTypeTextStyle: pickerTypeTextStyle,
     pickerTypeLabels: pickerTypeLabels,
     customColorSwatchesAndNames: customColorSwatchesAndNames,
+    customSecondaryColorSwatchesAndNames: customSecondaryColorSwatchesAndNames,
   ).showPickerDialog(
     context,
     title: dialogTitle,
@@ -700,6 +821,8 @@ Future<Color?> showColorPickerDialog(
     buttonPadding: buttonPadding,
     backgroundColor: backgroundColor,
     elevation: dialogElevation,
+    shadowColor: shadowColor,
+    surfaceTintColor: surfaceTintColor,
     semanticLabel: semanticLabel,
     insetPadding: insetPadding,
     clipBehavior: clipBehavior,

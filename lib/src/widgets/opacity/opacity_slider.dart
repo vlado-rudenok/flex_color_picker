@@ -22,7 +22,7 @@ import 'opacity_slider_track.dart';
 /// The slider has 255 steps so that it is possible to select any corresponding
 /// 8-bit alpha channel value. If the opacity is applied to a color using
 /// `withOpacity` and the alpha value displayed in the resulting color, this
-/// be observed.
+/// can be observed.
 ///
 /// The opacity value is returned via the onChanged called back. There are
 /// also callbacks for [onChangeStart] and [onChangeEnd].
@@ -107,7 +107,7 @@ class OpacitySlider extends StatelessWidget {
             data: _opacitySliderTheme(color, trackHeight, thumbRadius),
             child: Slider(
               value: opacity,
-              // If we do 255 divisions we can ca get a discrete step for each
+              // If we do 255 divisions we can get a discrete step for each
               // alpha value, even if we only display int 0...100 as opacity.
               divisions: 255,
               onChanged: onChanged,

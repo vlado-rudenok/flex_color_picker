@@ -14,7 +14,6 @@ class TonalPaletteColors extends StatefulWidget {
     Key? key,
     required this.spacing,
     required this.runSpacing,
-    required this.columnSpacing,
     required this.selectedColor,
     required this.onSelectColor,
     required this.tonalShouldUpdate,
@@ -26,6 +25,7 @@ class TonalPaletteColors extends StatefulWidget {
     required this.elevation,
     required this.selectedColorIcon,
     required this.selectedRequestsFocus,
+    required this.tonalPaletteFixedMinChroma,
   }) : super(key: key);
 
   /// The spacing between the color pick items.
@@ -33,9 +33,6 @@ class TonalPaletteColors extends StatefulWidget {
 
   /// The run spacing between the color pick items when wrapped on several rows.
   final double runSpacing;
-
-  /// The spacing after the main colors.
-  final double columnSpacing;
 
   /// The selected color.
   final Color selectedColor;
@@ -77,6 +74,9 @@ class TonalPaletteColors extends StatefulWidget {
   /// Defaults to false.
   final bool selectedRequestsFocus;
 
+  /// Weather to use fixed min chroma for tonal palette.
+  final bool tonalPaletteFixedMinChroma;
+
   @override
   State<TonalPaletteColors> createState() => _TonalPaletteColorsState();
 }
@@ -87,13 +87,19 @@ class _TonalPaletteColorsState extends State<TonalPaletteColors> {
   @override
   void initState() {
     super.initState();
-    tonalColors = getTonalColors(widget.selectedColor);
+    tonalColors = getTonalColors(
+      widget.selectedColor,
+      widget.tonalPaletteFixedMinChroma,
+    );
   }
 
   @override
   void didUpdateWidget(TonalPaletteColors oldWidget) {
     if (widget.tonalShouldUpdate) {
-      tonalColors = getTonalColors(widget.selectedColor);
+      tonalColors = getTonalColors(
+        widget.selectedColor,
+        widget.tonalPaletteFixedMinChroma,
+      );
     }
     super.didUpdateWidget(oldWidget);
   }
@@ -102,31 +108,28 @@ class _TonalPaletteColorsState extends State<TonalPaletteColors> {
   Widget build(BuildContext context) {
     final double effectiveBorderRadius =
         widget.borderRadius ?? widget.width / 4.0;
-    return Padding(
-      padding: EdgeInsets.only(bottom: widget.columnSpacing),
-      child: Wrap(
-        spacing: widget.spacing,
-        runSpacing: widget.runSpacing,
-        children: <Widget>[
-          for (final Color color in tonalColors)
-            ColorIndicator(
-              isSelected: widget.selectedColor == color ||
-                  widget.selectedColor.value == color.value,
-              color: color,
-              width: widget.width,
-              height: widget.height,
-              borderRadius: effectiveBorderRadius,
-              hasBorder: widget.hasBorder,
-              borderColor: widget.borderColor,
-              elevation: widget.elevation,
-              selectedIcon: widget.selectedColorIcon,
-              onSelect: () {
-                widget.onSelectColor(color);
-              },
-              selectedRequestsFocus: widget.selectedRequestsFocus,
-            ),
-        ],
-      ),
+    return Wrap(
+      spacing: widget.spacing,
+      runSpacing: widget.runSpacing,
+      children: <Widget>[
+        for (final Color color in tonalColors)
+          ColorIndicator(
+            isSelected: widget.selectedColor == color ||
+                widget.selectedColor.value32bit == color.value32bit,
+            color: color,
+            width: widget.width,
+            height: widget.height,
+            borderRadius: effectiveBorderRadius,
+            hasBorder: widget.hasBorder,
+            borderColor: widget.borderColor,
+            elevation: widget.elevation,
+            selectedIcon: widget.selectedColorIcon,
+            onSelect: () {
+              widget.onSelectColor(color);
+            },
+            selectedRequestsFocus: widget.selectedRequestsFocus,
+          ),
+      ],
     );
   }
 }

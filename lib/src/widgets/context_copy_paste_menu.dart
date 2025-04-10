@@ -146,13 +146,12 @@ class ContextCopyPasteMenu extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final ThemeData theme = Theme.of(context);
-
     // This is a merge of provided menuThemeData, with surrounding theme, with
     // fallback to default values.
     final PopupMenuThemeData effectiveMenuTheme = theme.popupMenuTheme.copyWith(
       color: menuThemeData?.color ??
           theme.popupMenuTheme.color ??
-          theme.cardColor.withOpacity(0.9),
+          theme.cardColor.withValues(alpha: 0.9),
       shape: menuThemeData?.shape ??
           theme.popupMenuTheme.shape ??
           RoundedRectangleBorder(
@@ -168,7 +167,6 @@ class ContextCopyPasteMenu extends StatelessWidget {
           theme.popupMenuTheme.enableFeedback ??
           true,
     );
-
     // This is a merge of provided iconThemeData, with surrounding theme, with
     // fallback to default values, color has no default, remains as null.
     final IconThemeData effectiveIconTheme = theme.iconTheme.copyWith(
@@ -176,10 +174,8 @@ class ContextCopyPasteMenu extends StatelessWidget {
       size: menuIconThemeData?.size ?? theme.iconTheme.size ?? 16,
       opacity: menuIconThemeData?.opacity ?? theme.iconTheme.opacity ?? 0.90,
     );
-
     // Get the Material localizations.
     final MaterialLocalizations translate = MaterialLocalizations.of(context);
-
     return Theme(
       data: theme.copyWith(
           popupMenuTheme: effectiveMenuTheme, iconTheme: effectiveIconTheme),

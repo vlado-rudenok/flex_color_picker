@@ -40,6 +40,7 @@ void main() {
                 ColorPickerType.accent: true,
                 ColorPickerType.bw: false,
                 ColorPickerType.custom: false,
+                ColorPickerType.customSecondary: false,
                 ColorPickerType.wheel: false,
               } &&
           widget.enableShadesSelection &&
@@ -97,10 +98,14 @@ void main() {
                 ColorPickerType.bw: 'Black & White',
                 ColorPickerType.both: 'Primary & Accent',
                 ColorPickerType.custom: 'Custom',
+                ColorPickerType.customSecondary: 'Option',
                 ColorPickerType.wheel: 'Wheel',
               } &&
           widget.customColorSwatchesAndNames ==
+              const <ColorSwatch<Object>, String>{} &&
+          widget.customSecondaryColorSwatchesAndNames ==
               const <ColorSwatch<Object>, String>{};
+
       expect(find.byWidgetPredicate(defaultPicker), findsOneWidget);
     });
     //
@@ -133,6 +138,7 @@ void main() {
               okTooltip: 'OK NOW',
               closeTooltip: 'CLOSE NOW',
             ),
+            width: 39,
             hasBorder: true,
             borderRadius: 10,
             borderColor: Colors.black,
@@ -157,6 +163,14 @@ void main() {
             onRecentColorsChanged: (List<Color> colors) {},
             selectedPickerTypeColor: Colors.white,
             customColorSwatchesAndNames: <ColorSwatch<Object>, String>{
+              ColorTools.createPrimarySwatch(const Color(0xFF6200EE)):
+                  'Guide Purple',
+              ColorTools.createPrimarySwatch(const Color(0xFF3700B3)):
+                  'Guide Purple Variant',
+              ColorTools.createAccentSwatch(const Color(0xFF03DAC6)):
+                  'Guide Teal',
+            },
+            customSecondaryColorSwatchesAndNames: <ColorSwatch<Object>, String>{
               ColorTools.createPrimarySwatch(const Color(0xFF6200EE)):
                   'Guide Purple',
               ColorTools.createPrimarySwatch(const Color(0xFF3700B3)):
@@ -204,7 +218,7 @@ void main() {
               ) &&
           widget.copyPasteBehavior == const ColorPickerCopyPasteBehavior() &&
           widget.selectedColorIcon == Icons.check &&
-          widget.width == 40 &&
+          widget.width == 39 &&
           widget.height == 40 &&
           widget.spacing == 4 &&
           widget.runSpacing == 4 &&
@@ -247,9 +261,13 @@ void main() {
                 ColorPickerType.bw: 'Black & White',
                 ColorPickerType.both: 'Primary & Accent',
                 ColorPickerType.custom: 'Custom',
+                ColorPickerType.customSecondary: 'Option',
                 ColorPickerType.wheel: 'Wheel',
               } &&
-          widget.customColorSwatchesAndNames != <ColorSwatch<Object>, String>{};
+          widget.customColorSwatchesAndNames !=
+              <ColorSwatch<Object>, String>{} &&
+          widget.customSecondaryColorSwatchesAndNames !=
+              <ColorSwatch<Object>, String>{};
       expect(find.byWidgetPredicate(customPicker, skipOffstage: false),
           findsOneWidget);
     });
@@ -307,6 +325,14 @@ void main() {
             onRecentColorsChanged: (List<Color> colors) {},
             selectedPickerTypeColor: Colors.white,
             customColorSwatchesAndNames: <ColorSwatch<Object>, String>{
+              ColorTools.createPrimarySwatch(const Color(0xFF6200EE)):
+                  'Guide Purple',
+              ColorTools.createPrimarySwatch(const Color(0xFF3700B3)):
+                  'Guide Purple Variant',
+              ColorTools.createAccentSwatch(const Color(0xFF03DAC6)):
+                  'Guide Teal',
+            },
+            customSecondaryColorSwatchesAndNames: <ColorSwatch<Object>, String>{
               ColorTools.createPrimarySwatch(const Color(0xFF6200EE)):
                   'Guide Purple',
               ColorTools.createPrimarySwatch(const Color(0xFF3700B3)):
@@ -397,9 +423,13 @@ void main() {
                 ColorPickerType.bw: 'Black & White',
                 ColorPickerType.both: 'Primary & Accent',
                 ColorPickerType.custom: 'Custom',
+                ColorPickerType.customSecondary: 'Option',
                 ColorPickerType.wheel: 'Wheel',
               } &&
-          widget.customColorSwatchesAndNames != <ColorSwatch<Object>, String>{};
+          widget.customColorSwatchesAndNames !=
+              <ColorSwatch<Object>, String>{} &&
+          widget.customSecondaryColorSwatchesAndNames !=
+              <ColorSwatch<Object>, String>{};
       expect(find.byWidgetPredicate(customPicker), findsOneWidget);
     });
 
@@ -485,6 +515,14 @@ void main() {
             onRecentColorsChanged: (List<Color> colors) {},
             selectedPickerTypeColor: Colors.white,
             customColorSwatchesAndNames: <ColorSwatch<Object>, String>{
+              ColorTools.createPrimarySwatch(const Color(0xFF6200EE)):
+                  'Guide Purple',
+              ColorTools.createPrimarySwatch(const Color(0xFF3700B3)):
+                  'Guide Purple Variant',
+              ColorTools.createAccentSwatch(const Color(0xFF03DAC6)):
+                  'Guide Teal',
+            },
+            customSecondaryColorSwatchesAndNames: <ColorSwatch<Object>, String>{
               ColorTools.createPrimarySwatch(const Color(0xFF6200EE)):
                   'Guide Purple',
               ColorTools.createPrimarySwatch(const Color(0xFF3700B3)):
@@ -596,9 +634,13 @@ void main() {
                 ColorPickerType.bw: 'Black & White',
                 ColorPickerType.both: 'Primary & Accent',
                 ColorPickerType.custom: 'Custom',
+                ColorPickerType.customSecondary: 'Option',
                 ColorPickerType.wheel: 'Wheel',
               } &&
-          widget.customColorSwatchesAndNames != <ColorSwatch<Object>, String>{};
+          widget.customColorSwatchesAndNames !=
+              <ColorSwatch<Object>, String>{} &&
+          widget.customSecondaryColorSwatchesAndNames !=
+              <ColorSwatch<Object>, String>{};
       expect(find.byWidgetPredicate(customPicker), findsOneWidget);
     });
 
@@ -680,6 +722,14 @@ void main() {
             onRecentColorsChanged: (List<Color> colors) {},
             selectedPickerTypeColor: Colors.white,
             customColorSwatchesAndNames: <ColorSwatch<Object>, String>{
+              ColorTools.createPrimarySwatch(const Color(0xFF6200EE)):
+                  'Guide Purple',
+              ColorTools.createPrimarySwatch(const Color(0xFF3700B3)):
+                  'Guide Purple Variant',
+              ColorTools.createAccentSwatch(const Color(0xFF03DAC6)):
+                  'Guide Teal',
+            },
+            customSecondaryColorSwatchesAndNames: <ColorSwatch<Object>, String>{
               ColorTools.createPrimarySwatch(const Color(0xFF6200EE)):
                   'Guide Purple',
               ColorTools.createPrimarySwatch(const Color(0xFF3700B3)):
@@ -791,9 +841,13 @@ void main() {
                 ColorPickerType.bw: 'Black & White',
                 ColorPickerType.both: 'Primary & Accent',
                 ColorPickerType.custom: 'Custom',
+                ColorPickerType.customSecondary: 'Option',
                 ColorPickerType.wheel: 'Wheel',
               } &&
-          widget.customColorSwatchesAndNames != <ColorSwatch<Object>, String>{};
+          widget.customColorSwatchesAndNames !=
+              <ColorSwatch<Object>, String>{} &&
+          widget.customSecondaryColorSwatchesAndNames !=
+              <ColorSwatch<Object>, String>{};
       expect(find.byWidgetPredicate(customPicker), findsOneWidget);
     });
 
@@ -875,6 +929,14 @@ void main() {
             onRecentColorsChanged: (List<Color> colors) {},
             selectedPickerTypeColor: Colors.white,
             customColorSwatchesAndNames: <ColorSwatch<Object>, String>{
+              ColorTools.createPrimarySwatch(const Color(0xFF6200EE)):
+                  'Guide Purple',
+              ColorTools.createPrimarySwatch(const Color(0xFF3700B3)):
+                  'Guide Purple Variant',
+              ColorTools.createAccentSwatch(const Color(0xFF03DAC6)):
+                  'Guide Teal',
+            },
+            customSecondaryColorSwatchesAndNames: <ColorSwatch<Object>, String>{
               ColorTools.createPrimarySwatch(const Color(0xFF6200EE)):
                   'Guide Purple',
               ColorTools.createPrimarySwatch(const Color(0xFF3700B3)):
@@ -986,9 +1048,13 @@ void main() {
                 ColorPickerType.bw: 'Black & White',
                 ColorPickerType.both: 'Primary & Accent',
                 ColorPickerType.custom: 'Custom',
+                ColorPickerType.customSecondary: 'Option',
                 ColorPickerType.wheel: 'Wheel',
               } &&
-          widget.customColorSwatchesAndNames != <ColorSwatch<Object>, String>{};
+          widget.customColorSwatchesAndNames !=
+              <ColorSwatch<Object>, String>{} &&
+          widget.customSecondaryColorSwatchesAndNames !=
+              <ColorSwatch<Object>, String>{};
       expect(find.byWidgetPredicate(customPicker), findsOneWidget);
     });
   });
