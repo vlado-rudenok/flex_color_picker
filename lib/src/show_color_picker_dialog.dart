@@ -834,7 +834,7 @@ Future<Color?> showColorPickerDialog(
     transitionDuration: transitionDuration,
     constraints: constraints,
   ))) {
-    selectedColor = null;
+    return null;
   }
   return selectedColor;
 }
